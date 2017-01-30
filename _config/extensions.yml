@@ -1,0 +1,9 @@
+---
+Name: treehugger-extensions
+After:
+  - 'framework/*'
+  - 'cms/*'
+---
+Site:
+  extensions:
+    - SortableMenuSiteExtension

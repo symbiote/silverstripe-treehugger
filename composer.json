@@ -1,0 +1,24 @@
+{
+    "name": "silbinarywolf/silverstripe-treehugger",
+    "description": "",
+    "type": "silverstripe-module",
+    "keywords": ["silverstripe"],
+    "license": "BSD-3-Clause",
+    "authors": [
+    {
+        "name": "Jake Bentvelzen",
+        "email": "jake@silverstripe.com.au"
+    }],
+    "require": {
+        "silverstripe/framework": "~3.1"
+    },
+    "suggest": {
+        "silverstripe-australia/silverstripe-multisites": "Compatible with Multisites module."
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        },
+        "installer-name": "treehugger"
+    }
+}

@@ -38,13 +38,11 @@ Page:
     <% if $SortableMenu('ShowInFooter') %>
         <ul>
         <% loop $SortableMenu('ShowInFooter') %>
-            <% loop $MenuList %>
-                <li>
-                    <a href="$Link">
-                        $MenuTitle.XML
-                    </a>
-                </li>
-            <% end_loop %>
+            <li>
+                <a href="$Link">
+                    $MenuTitle.XML
+                </a>
+            </li>
         <% end_loop %>
         </ul>
     <% end_if %>

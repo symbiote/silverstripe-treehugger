@@ -7,7 +7,9 @@ to manage all the menus on if you visit a "Site" page type (Multisites only)
 
 # Composer Install
 
-[TODO]
+```
+composer require silbinarywolf/silverstripe-treehugger:~1.0
+```
 
 # Quick Start
 

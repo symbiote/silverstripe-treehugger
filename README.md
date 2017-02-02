@@ -3,12 +3,12 @@
 Add additional menus (such as footer, sidebars) programmatically.
 
 This will automatically add a checkbox in Settings for each page type as well as give you a GridField
-to manage all the menus on if you visit a "Site" page type (Multisites only)
+to manage all the menus on SiteConfig. ("Site" page type if you're using Multisites module)
 
 # Composer Install
 
 ```
-composer require silbinarywolf/silverstripe-treehugger:~1.0
+composer require silbinarywolf/silverstripe-treehugger:~1.1.0
 ```
 
 # Quick Start
@@ -51,8 +51,6 @@ Page:
 <% end_cached %>
 ```
 
-# Supports (Currently Requires)
+# Supports
+- Silverstripe 3.2 and higher
 - Multisites
-
-# Todo
-- If Multisites is not installed, make the site menus be sortable in 'SiteConfig' UI.

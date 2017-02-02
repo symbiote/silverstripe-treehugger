@@ -1,12 +1,33 @@
 <?php
 
-class SortableMenuSiteExtension extends Extension {
-	public function updateSiteCMSFields(FieldList $fields) {
-		$tab = $fields->findOrMakeTab('Root.SortableMenu', 'Menus');
+class SortableMenuManageExtension extends Extension {
+	/**
+	 * Determine whether the Menus tab has been created or not already.
+	 *
+	 * @var boolean
+	 */
+	protected $fields_added = false;
+
+	public function updateCMSFields(FieldList $fields) {
+		if ($this->fields_added) {
+			return;
+		}
+		$this->fields_added = true;
+
+		$fields->findOrMakeTab('Root.SortableMenu', 'Menus');
 		$menus = singleton('SortableMenu')->getSortableMenuConfiguration();
 		foreach ($menus as $fieldName => $extraInfo) {
-			$fields->addFieldToTab('Root.SortableMenu', $this->owner->createMenuGridField('SiteTree', $fieldName, $extraInfo['Title'], $extraInfo['Sort']));
+			$fieldTitle = $extraInfo['Title'];
+			$fields->findOrMakeTab('Root.SortableMenu.'.$fieldName, $fieldTitle);
+			$fields->addFieldToTab('Root.SortableMenu.'.$fieldName, $this->owner->createMenuGridField('SiteTree', $fieldName, $fieldTitle, $extraInfo['Sort']));
 		}
+	}
+
+	/**
+	 * Support 'Site' from Multisites module
+	 */
+	public function updateSiteCMSFields(FieldList $fields) {
+		$this->updateCMSFields($fields);
 	}
 
 	public function createMenuGridField($class, $fieldName, $fieldTitle, $sortFieldName) {
@@ -15,8 +36,6 @@ class SortableMenuSiteExtension extends Extension {
 
 		$gridField = GridField::create($fieldName, $fieldTitle, $list, $config = GridFieldConfig_RelationEditor::create());
 		$gridField->setDescription('Any "Modified" or "Draft" pages must be saved and published after sorting to display on the live site.');
-		$tab = new Tab($fieldName, $fieldTitle);
-		$tab->push($gridField);
 
 		$config->removeComponentsByType('GridFieldAddExistingAutocompleter');
 		$config->removeComponentsByType('GridFieldAddNewButton');
@@ -45,6 +64,6 @@ class SortableMenuSiteExtension extends Extension {
                 }
             ));
 		}
-		return $tab;
+		return $gridField;
 	}
 }

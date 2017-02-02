@@ -1,9 +1,20 @@
 ---
-Name: treehugger-extensions
+Name: treehugger_multisites
 After:
-  - 'framework/*'
-  - 'cms/*'
+  - 'framework/*', 'cms/*'
+Only:
+  moduleexists: multisites
 ---
 Site:
   extensions:
-    - SortableMenuSiteExtension
+    - SortableMenuManageExtension
+---
+Name: treehugger_default
+After:
+  - 'framework/*', 'cms/*'
+Except:
+  moduleexists: multisites
+---
+SiteConfig:
+  extensions:
+    - SortableMenuManageExtension

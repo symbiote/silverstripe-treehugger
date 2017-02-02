@@ -2,8 +2,7 @@
 
 class SortableMenuSiteExtension extends Extension {
 	public function updateSiteCMSFields(FieldList $fields) {
-		$fields->addFieldToTab('Root', new TabSet('SortableMenu', 'Menus'));
-		//$fields->addFieldToTab('Root.SortableMenu', $this->owner->createMenuGridField('SiteTree', 'ShowInMenus', 'Show in menus?', 'Sort'));
+		$tab = $fields->findOrMakeTab('Root.SortableMenu', 'Menus');
 		$menus = singleton('SortableMenu')->getSortableMenuConfiguration();
 		foreach ($menus as $fieldName => $extraInfo) {
 			$fields->addFieldToTab('Root.SortableMenu', $this->owner->createMenuGridField('SiteTree', $fieldName, $extraInfo['Title'], $extraInfo['Sort']));
@@ -23,13 +22,13 @@ class SortableMenuSiteExtension extends Extension {
 		$config->removeComponentsByType('GridFieldAddNewButton');
 		$config->removeComponentsByType('GridFieldEditButton');
 		$config->removeComponentsByType('GridFieldDeleteAction');
-		$config->addComponent(new GridFieldAddSortableMenuItem($fieldName));
+		$config->removeComponentsByType('GridFieldFilterHeader');
+		$config->addComponent(Injector::inst()->createWithArgs('GridFieldAddSortableMenuItem', array($fieldName)));
 		$config->addComponent(GridFieldOrderableRows::create($sortFieldName));
 		$dataColumns = $config->getComponentByType('GridFieldDataColumns');
 		if ($dataColumns) {
 			$dataColumns->setDisplayFields(array(
 				'ID' => 'ID', 
-				//'CMSPublishedState' => 'State',
 				'getTreeTitle' => 'Title',
 			));
 			$dataColumns->setFieldFormatting(array(

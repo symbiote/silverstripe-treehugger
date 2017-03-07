@@ -14,12 +14,13 @@ class SortableMenuManageExtension extends Extension {
 		}
 		$this->fields_added = true;
 
-		$fields->findOrMakeTab('Root.SortableMenu', 'Menus');
+		$sortableMenuTab = $fields->findOrMakeTab('Root.SortableMenu', 'Menus');
 		$menus = singleton('SortableMenu')->getSortableMenuConfiguration();
 		foreach ($menus as $fieldName => $extraInfo) {
 			$fieldTitle = $extraInfo['Title'];
-			$fields->findOrMakeTab('Root.SortableMenu.'.$fieldName, $fieldTitle);
-			$fields->addFieldToTab('Root.SortableMenu.'.$fieldName, $this->owner->createMenuGridField('SiteTree', $fieldName, $fieldTitle, $extraInfo['Sort']));
+			$menuTab = Tab::create($fieldName, $fieldTitle);
+			$sortableMenuTab->push($menuTab);
+			$menuTab->push($this->owner->createMenuGridField('SiteTree', $fieldName, $fieldTitle, $extraInfo['Sort']));
 		}
 	}
 

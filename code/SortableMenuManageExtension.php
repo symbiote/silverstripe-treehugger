@@ -1,25 +1,35 @@
 <?php
 
 class SortableMenuManageExtension extends Extension {
-	/**
-	 * Determine whether the Menus tab has been created or not already.
-	 *
-	 * @var boolean
-	 */
-	protected $fields_added = false;
-
 	public function updateCMSFields(FieldList $fields) {
-		if ($this->fields_added) {
+		// Determine whether the "Menus" tab has been created or not already.
+		if ($this->owner->_sortable_menu_manage_getcmsfields_called) {
 			return;
 		}
-		$this->fields_added = true;
+		$this->owner->_sortable_menu_manage_getcmsfields_called = true;
 
+		$rootTabSet = $fields->fieldByName('Root');
+		$sortableMenuTab = $rootTabSet->fieldByName('SortableMenu');
+		if (!$sortableMenuTab) {
+			$sortableMenuTab = TabSet::create('SortableMenu', 'Menus');
+			$rootTabSet->push($sortableMenuTab);
+		}
+		$sortableMenuTab->setTitle('Menus');
+		if (!$sortableMenuTab instanceof TabSet) {
+			$badClass = get_class($sortableMenuTab);
+			throw new Exception('Sortable Menu must be a "TabSet", not "'.$badClass.'"');
+		}
 		$sortableMenuTab = $fields->findOrMakeTab('Root.SortableMenu', 'Menus');
 		$menus = singleton('SortableMenu')->getSortableMenuConfiguration();
 		foreach ($menus as $fieldName => $extraInfo) {
 			$fieldTitle = $extraInfo['Title'];
-			$menuTab = Tab::create($fieldName, $fieldTitle);
-			$sortableMenuTab->push($menuTab);
+			// NOTE(Jake): Check if Tab has already been created by user-code / outside of the module
+			$menuTab = $sortableMenuTab->fieldByName($fieldName);
+			if (!($menuTab instanceof Tab)) {
+				$menuTab = Tab::create($fieldName, $fieldTitle);
+				$sortableMenuTab->push($menuTab);
+			}
+			$menuTab->setTitle($fieldTitle);
 			$menuTab->push($this->owner->createMenuGridField('SiteTree', $fieldName, $fieldTitle, $extraInfo['Sort']));
 		}
 	}

@@ -33,7 +33,8 @@
     },
     "suggest": {
         "silverstripe/silverstripe-siteconfig": "Compatible with SiteConfig module.",
-        "symbiote/silverstripe-multisites": "Compatible with Multisites module."
+        "symbiote/silverstripe-multisites": "Compatible with Multisites module.",
+        "symbiote/silverstripe-gridfieldextensions": "Install to sort menu order via SiteConfig or Multisites"
     },
     "extra": {
         "branch-alias": {

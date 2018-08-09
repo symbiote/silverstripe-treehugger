@@ -1,6 +1,6 @@
 <?php
 
-class SortableMenuTest extends SapphireTest
+class SortableMenuDBTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
@@ -54,7 +54,7 @@ class SortableMenuTest extends SapphireTest
         );
     }
 
-    public function testRetrievingPagesByMenu()
+    public function testRetrievingPagesByMenuDirectly()
     {
         // NOTE(Jake): 2018-08-09
         //

@@ -19,7 +19,7 @@ class SortableMenuManageExtension extends Extension
         $sortableMenuTab->setTitle('Menus');
         if (!$sortableMenuTab instanceof TabSet) {
             $badClass = get_class($sortableMenuTab);
-            throw new Exception('Sortable Menu must be a "TabSet", not "'.$badClass.'"');
+            throw new SortableMenuException('Sortable Menu must be a "TabSet", not "'.$badClass.'"');
         }
         $sortableMenuTab = $fields->findOrMakeTab('Root.SortableMenu', 'Menus');
         $menus = singleton('SortableMenu')->getSortableMenuConfiguration();

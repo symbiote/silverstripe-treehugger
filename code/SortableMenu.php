@@ -16,7 +16,7 @@ class SortableMenu extends DataExtension
     public static function get_extra_config($class, $extension, $args)
     {
         if (self::$inConfigCall) {
-            throw new Exception('Recursion error.');
+            throw new SortableMenuException(__FUNCTION__.': Recursion error.');
         }
         // NOTE(Jake): If 'get_extra_config' is really aiming to be deprecated
         //             post 3.2+, then this logic can moved to a CompositeDBField
@@ -33,15 +33,21 @@ class SortableMenu extends DataExtension
         return $result;
     }
 
+    /**
+     * @return DataList
+     */
     public function SortableMenu($fieldName)
     {
         return $this->SortableMenuUncached($fieldName);
     }
 
+    /**
+     * @return string
+     */
     public function SortableMenuCacheKey($cacheKey)
     {
         if (!$cacheKey) {
-            throw new Exception("Cannot have empty $cacheKey value.");
+            throw new SortableMenuException(__FUNCTION__.': Cannot have empty $cacheKey parameter.');
         }
         $baseClass = $this->ownerBaseClass;
         if (!isset(self::$_cached_cache_max_lastedited[$baseClass])) {
@@ -56,11 +62,14 @@ class SortableMenu extends DataExtension
         return $cacheKey.'_'.self::$_cached_cache_max_lastedited[$baseClass];
     }
 
+    /**
+     * @return DataList
+     */
     public function SortableMenuUncached($fieldName)
     {
         $menus = $this->getSortableMenuConfiguration();
         if (!isset($menus[$fieldName])) {
-            throw new Exception('"'.$fieldName.'" hasn\'t been configured.');
+            throw new SortableMenuException(__FUNCTION__.': "'.$fieldName.'" hasn\'t been configured.');
         }
         $extraInfo = $menus[$fieldName];
         $class = $this->ownerBaseClass;

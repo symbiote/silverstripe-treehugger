@@ -16,32 +16,40 @@ class SortableMenuRenderingTest extends SapphireTest
                 'Title' => 'Sidebar',
             ),
         ));
+        // NOTE(Jake): 2018-08-09
+        //
+        // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
+        // I suspect its not flushing the YML or something?
+        //
+        Config::inst()->update('Page', 'extensions', array(
+            'SortableMenu',
+        ));
         parent::setUp();
     }
 
     public function testRenderingMenusByOrder()
     {
         // Create footer items
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Footer Menu Item #3';
         $record->ShowInFooter = true;
         $record->SortShowInFooter = 3;
         $record->write();
 
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Footer Menu Item #1';
         $record->ShowInFooter = true;
         $record->SortShowInFooter = 1;
         $record->write();
 
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Footer Menu Item #2';
         $record->ShowInFooter = true;
         $record->SortShowInFooter = 2;
         $record->write();
 
         // Get a page from DB - So we can call $SortableMenus() in the template.
-        $record = SortablePage::get()->filter(array('SortShowInFooter' => 1))->first();
+        $record = Page::get()->filter(array('SortShowInFooter' => 1))->first();
         $this->assertNotNull($record);
 
         $expectedHTML = <<<HTML
@@ -72,26 +80,26 @@ HTML;
     public function testPassInMenuList()
     {
         // Create footer items
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Sidebar Menu Item #3';
         $record->ShowInSidebar = true;
         $record->SortShowInSidebar = 3;
         $record->write();
 
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Sidebar Menu Item #1';
         $record->ShowInSidebar = true;
         $record->SortShowInSidebar = 1;
         $record->write();
 
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Sidebar Menu Item #2';
         $record->ShowInSidebar = true;
         $record->SortShowInSidebar = 2;
         $record->write();
 
         // Get a page from DB - So we can call $SortableMenus() in the template.
-        $record = SortablePage::get()->filter(array('SortShowInSidebar' => 1))->first();
+        $record = Page::get()->filter(array('SortShowInSidebar' => 1))->first();
         $this->assertNotNull($record);
 
         // Test that it contains `SortableMenuFieldName` fiel

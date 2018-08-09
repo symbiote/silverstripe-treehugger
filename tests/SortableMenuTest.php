@@ -56,10 +56,22 @@ class SortableMenuTest extends SapphireTest
 
     public function testRetrievingPagesByMenu()
     {
+        // NOTE(Jake): 2018-08-09
+        //
+        // To ensure PostgreSQL support works SS 3.2 projects,
+        // I need to pass in 0 or 1, not false or true.
+        //
+        // Otherwise I get the following error:
+        // - pg_query_params(): Query failed: ERROR:  invalid input syntax for integer: ""
+        //
+        // I assume this is because PostgreSQL just casts the given value to a string and
+        // in PHP when you cast `false` to a string, you get a blank string.
+        //
+
         // Check we have no items in the menu
-        $count = SortablePage::get()->filter(array('ShowInFooter' => false))->count();
+        $count = SortablePage::get()->filter(array('ShowInFooter' => 0))->count();
         $this->assertEquals(0, $count);
-        $count = SortablePage::get()->filter(array('ShowInSidebar' => false))->count();
+        $count = SortablePage::get()->filter(array('ShowInSidebar' => 0))->count();
         $this->assertEquals(0, $count);
 
         // Check we have 1 footer menu item
@@ -67,7 +79,7 @@ class SortableMenuTest extends SapphireTest
         $record->Title = 'Footer Menu Item #1';
         $record->ShowInFooter = true;
         $record->write();
-        $count = SortablePage::get()->filter(array('ShowInFooter' => true))->count();
+        $count = SortablePage::get()->filter(array('ShowInFooter' => 1))->count();
         $this->assertEquals(1, $count);
 
         // Check we have 1 sidemenu menu item
@@ -75,7 +87,7 @@ class SortableMenuTest extends SapphireTest
         $record->Title = 'Footer Menu Item #1';
         $record->ShowInSidebar = true;
         $record->write();
-        $count = SortablePage::get()->filter(array('ShowInSidebar' => true))->count();
+        $count = SortablePage::get()->filter(array('ShowInSidebar' => 1))->count();
         $this->assertEquals(1, $count);
     }
 }

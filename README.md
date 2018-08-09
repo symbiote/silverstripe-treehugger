@@ -1,56 +1,33 @@
-# Introduction
+# TreeHugger (Sortable Menus)
 
-Add additional menus (such as footer, sidebars) programmatically.
+[![Build Status](https://travis-ci.org/silbinarywolf/silverstripe-treehugger.svg?branch=master)](https://travis-ci.org/silbinarywolf/silverstripe-treehugger)
+[![Latest Stable Version](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/version.svg)](https://github.com/silbinarywolf/silverstripe-treehugger/releases)
+[![Latest Unstable Version](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/v/unstable.svg)](https://packagist.org/packages/silbinarywolf/silverstripe-treehugger)
+[![Total Downloads](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/downloads.svg)](https://packagist.org/packages/silbinarywolf/silverstripe-treehugger)
+[![License](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/license.svg)](https://github.com/silbinarywolf/silverstripe-treehugger/blob/master/LICENSE.md)
 
-This will automatically add a checkbox in Settings for each page type as well as give you a GridField
-to manage all the menus on SiteConfig. ("Site" page type if you're using Multisites module)
+Add additional menus (such as footer, sidebars) programmatically that can be managed by CMS users nicely on the SiteConfig or Multisite view.
 
-# Composer Install
+## Composer Install
 
 ```
 composer require silbinarywolf/silverstripe-treehugger:~1.1.0
 ```
 
-# Quick Start
+## Requirements
 
-1) Drop folder in, dev/build?flush=all
+* SilverStripe 3.1+
+* (Optional) SiteConfig
+* (Optional) Multisites
 
-2) Configure additional menus in YML like so, and dev/build?flush=all
+**NOTE: To manage menus at the top-level of the site, you must have either SiteConfig or Multisites installed.**
 
-```yml
----
-Name: menus
-After:
-  - 'framework/*', 'cms/*'
----
-SortableMenu:
-  menus:
-    ShowInFooter:
-      Title: 'Footer'
-    ShowInSidebar:
-      Title: 'Sidebar'
-Page:
-  extensions:
-    - SortableMenu
-```
+## Documentation
 
-3) Add into your template:
-```html
-<% cached $SortableMenuCacheKey('ShowInFooter') %>
-    <% if $SortableMenu('ShowInFooter') %>
-        <ul>
-        <% loop $SortableMenu('ShowInFooter') %>
-            <li>
-                <a href="$Link">
-                    $MenuTitle.XML
-                </a>
-            </li>
-        <% end_loop %>
-        </ul>
-    <% end_if %>
-<% end_cached %>
-```
+* [Quick Start](docs/en/quick-start.md)
+* [License](LICENSE.md)
+* [Contributing](CONTRIBUTING.md)
 
-# Supports
-- Silverstripe 3.2 and higher
-- Multisites
+## Credits
+
+* [Jake Bentvelzen](https://github.com/SilbinaryWolf) for the initial build

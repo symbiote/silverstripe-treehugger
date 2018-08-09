@@ -14,12 +14,20 @@ class SortableMenuDBTest extends SapphireTest
                 'Title' => 'Sidebar',
             ),
         ));
+        // NOTE(Jake): 2018-08-09
+        //
+        // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
+        // I suspect its not flushing the YML or something?
+        //
+        Config::inst()->update('Page', 'extensions', array(
+            'SortableMenu',
+        ));
         parent::setUp();
     }
 
     public function testDBFieldsApplyToDataObject()
     {
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Footer Menu Item #1';
         $record->ShowInFooter = true;
         $record->write();
@@ -29,14 +37,14 @@ class SortableMenuDBTest extends SapphireTest
         // We re-retrieve the record. If it saved correctly
         // into the database, ShowInFooter will be `true`
         //
-        $record = SortablePage::get()->byID($record->ID);
+        $record = Page::get()->byID($record->ID);
         $this->assertEquals(
             true,
             $record->ShowInFooter,
             'ShowInFooter is not "true". This probably means that the \'menus\' Config/YML in the setUp() method isn\'t working as expected.'
         );
 
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Sidebar Menu Item #1';
         $record->ShowInSidebar = true;
         $record->write();
@@ -46,7 +54,7 @@ class SortableMenuDBTest extends SapphireTest
         // We re-retrieve the record. If it saved correctly
         // into the database, ShowInSidebar will be `true`
         //
-        $record = SortablePage::get()->byID($record->ID);
+        $record = Page::get()->byID($record->ID);
         $this->assertEquals(
             true,
             $record->ShowInSidebar,
@@ -69,25 +77,25 @@ class SortableMenuDBTest extends SapphireTest
         //
 
         // Check we have no items in the menu
-        $count = SortablePage::get()->filter(array('ShowInFooter' => 0))->count();
+        $count = Page::get()->filter(array('ShowInFooter' => 0))->count();
         $this->assertEquals(0, $count);
-        $count = SortablePage::get()->filter(array('ShowInSidebar' => 0))->count();
+        $count = Page::get()->filter(array('ShowInSidebar' => 0))->count();
         $this->assertEquals(0, $count);
 
         // Check we have 1 footer menu item
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Footer Menu Item #1';
         $record->ShowInFooter = true;
         $record->write();
-        $count = SortablePage::get()->filter(array('ShowInFooter' => 1))->count();
+        $count = Page::get()->filter(array('ShowInFooter' => 1))->count();
         $this->assertEquals(1, $count);
 
         // Check we have 1 sidemenu menu item
-        $record = new SortablePage();
+        $record = new Page();
         $record->Title = 'Footer Menu Item #1';
         $record->ShowInSidebar = true;
         $record->write();
-        $count = SortablePage::get()->filter(array('ShowInSidebar' => 1))->count();
+        $count = Page::get()->filter(array('ShowInSidebar' => 1))->count();
         $this->assertEquals(1, $count);
     }
 }

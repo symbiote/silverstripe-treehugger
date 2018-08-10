@@ -19,8 +19,9 @@ composer require silbinarywolf/silverstripe-treehugger:~1.1.0
 * SilverStripe 3.1+
 * (Optional) SiteConfig
 * (Optional) Multisites
+* (Optional) GridField Extensions 2.X or 3.X
 
-**NOTE: To manage menus at the top-level of the site, you must have either SiteConfig or Multisites installed.**
+**NOTE: To manage menus at the top-level of the site, you must have either SiteConfig or Multisites installed. If you want the ability to sort the menu, you need to install GridField Extensions.**
 
 ## Documentation
 

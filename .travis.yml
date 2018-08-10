@@ -2,6 +2,7 @@ language: php
 
 php:
   - 5.4
+
 env:
   matrix:
     - DB=MYSQL CORE_RELEASE=3.1
@@ -12,19 +13,37 @@ matrix:
       env:
         - DB=MYSQL
         - CORE_RELEASE=3.1
+        - MULTISITES_VERSION=1.2.5
+        - GRIDFIELDEXTENSIONS_VERSION=2.0.2
     - php: 5.4
       env:
         - DB=PGSQL
         - CORE_RELEASE=3.2
+        - MULTISITES_VERSION=4.3.0
+        # NOTE(Jake): 2018-08-10
+        #
+        # This test is testing the *lack* of GridFieldExtensions
+        # being installed.
+        #
+        #- GRIDFIELDEXTENSIONS_VERSION=2.0.2
     - php: 5.5
       env:
         - DB=MYSQL
         - CORE_RELEASE=3.3
+        - MULTISITES_VERSION=4.3.0
+        - GRIDFIELDEXTENSIONS_VERSION=2.0.2
     - php: 5.6
       env:
         - DB=MYSQL
         - PHPCS_TEST=1
         - CORE_RELEASE=3
+        - MULTISITES_VERSION=4.3.0
+        # NOTE(Jake): 2018-08-10
+        #
+        # This test is testing the *lack* of GridFieldExtensions
+        # being installed.
+        #
+        #- GRIDFIELDEXTENSIONS_VERSION=2.0.2
 
 before_script:
   - composer self-update || true
@@ -34,5 +53,9 @@ before_script:
   - cd ~/builds/ss
 
 script:
+  - if [[ $GRIDFIELDEXTENSIONS_VERSION ]]; then composer require symbiote/silverstripe-gridfieldextensions:$GRIDFIELDEXTENSIONS_VERSION; fi
   - if [[ $PHPCS_TEST ]]; then vendor/bin/phpcs treehugger/code/ treehugger/tests/ -n; fi
-  - vendor/bin/phpunit treehugger/tests/
+  - vendor/bin/phpunit treehugger/tests
+  - if [[ $MULTISITES_VERSION ]]; then composer require symbiote/silverstripe-multisites:$MULTISITES_VERSION; fi
+  # NOTE: Because we installed a new module, we need to flush the silverstripe-cache (and possibly rebuild the DB)
+  - if [[ $MULTISITES_VERSION ]]; then vendor/bin/phpunit treehugger/tests/SortableMenuMultisitesTest '' flush=all; fi

@@ -4,7 +4,7 @@ php:
   - 5.4
 env:
   matrix:
-    - DB=MYSQL CORE_RELEASE=3.1
+    - DB=MYSQL CORE_RELEASE=3.1 MULTISITES_VERSION=4.3.0
 
 matrix:
   include:
@@ -36,3 +36,5 @@ before_script:
 script:
   - if [[ $PHPCS_TEST ]]; then vendor/bin/phpcs treehugger/code/ treehugger/tests/ -n; fi
   - vendor/bin/phpunit treehugger/tests/
+  - if [[ -z $MULTISITES_VERSION ]]; then composer require symbiote/silverstripe-multisites:$MULTISITES_VERSION --no-update; fi
+  - if [[ -z $MULTISITES_VERSION ]]; then vendor/bin/phpunit treehugger/tests/SortableMenuMultisitesTest; fi

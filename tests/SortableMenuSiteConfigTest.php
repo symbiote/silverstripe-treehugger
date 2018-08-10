@@ -39,7 +39,7 @@ class SortableMenuSiteConfigTest extends FunctionalTest
 
         // Taken from SiteConfig::requireDefaultRecords()
         $config = DataObject::get_one('SiteConfig');
-        if(!$config) {
+        if (!$config) {
             $config = SiteConfig::make_site_config();
         }
 

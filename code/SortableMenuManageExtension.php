@@ -13,7 +13,7 @@ class SortableMenuManageExtension extends Extension
             // this for backwards compatibility.
             //
             $basePageClass = 'SiteTree';
-        } else if (Page::has_extension('SortableMenu')) {
+        } elseif (Page::has_extension('SortableMenu')) {
             $basePageClass = 'Page';
         }
 

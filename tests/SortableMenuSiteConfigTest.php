@@ -1,5 +1,15 @@
 <?php
 
+namespace Symbiote\SortableMenu\Tests;
+
+use Page;
+
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Core\Config\Config;
+use Symbiote\SortableMenu\SortableMenu;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\FunctionalTest;
+
 class SortableMenuSiteConfigTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
@@ -12,11 +22,11 @@ class SortableMenuSiteConfigTest extends FunctionalTest
         //
         // If we can't find "SiteConfig" class, skip all tests.
         //
-        if (!class_exists('SiteConfig')) {
+        if (!class_exists(SiteConfig::class)) {
             $this->skipTest = true;
         }
 
-        Config::inst()->update('SortableMenu', 'menus', array(
+        Config::inst()->update(SortableMenu::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
             ),
@@ -29,7 +39,7 @@ class SortableMenuSiteConfigTest extends FunctionalTest
         // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
         // I suspect its not flushing the YML or something?
         //
-        Page::add_extension('SortableMenu');
+        Page::add_extension(SortableMenu::class);
         parent::setUp();
     }
 
@@ -38,7 +48,7 @@ class SortableMenuSiteConfigTest extends FunctionalTest
         $this->logInWithPermission('ADMIN');
 
         // Taken from SiteConfig::requireDefaultRecords()
-        $config = DataObject::get_one('SiteConfig');
+        $config = DataObject::get_one(SiteConfig::class);
         if (!$config) {
             $config = SiteConfig::make_site_config();
         }

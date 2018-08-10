@@ -1,12 +1,19 @@
 <?php
 
+namespace Symbiote\SortableMenu\Tests;
+
+use Page;
+use SilverStripe\Core\Config\Config;
+use Symbiote\SortableMenu\SortableMenu;
+use SilverStripe\Dev\SapphireTest;
+
 class SortableMenuDBTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
     public function setUp()
     {
-        Config::inst()->update('SortableMenu', 'menus', array(
+        Config::inst()->update(SortableMenu::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
             ),
@@ -20,7 +27,7 @@ class SortableMenuDBTest extends SapphireTest
         // I suspect its not flushing the YML or something?
         //
         Config::inst()->update('Page', 'extensions', array(
-            'SortableMenu',
+            SortableMenu::class,
         ));
         parent::setUp();
     }

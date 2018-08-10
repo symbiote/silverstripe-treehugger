@@ -1,0 +1,9 @@
+mappings:
+  GridFieldAddSortableMenuItem: SilbinaryWolf\SortableMenu\GridFieldAddSortableMenuItem
+  SortableMenuManageExtension: SilbinaryWolf\SortableMenu\SortableMenuManageExtension
+  SortableMenuException: SilbinaryWolf\SortableMenu\SortableMenuException
+  SortableMenu: Symbiote\SortableMenu\SortableMenuExtension
+  SortableMenuDBTest: Symbiote\SortableMenu\Tests\SortableMenuDBTest
+  SortableMenuSiteConfigTest: Symbiote\SortableMenu\Tests\SortableMenuSiteConfigTest
+  SortableMenuRenderingTest: Symbiote\SortableMenu\Tests\SortableMenuRenderingTest
+  SortableMenuMultisitesTest: Symbiote\SortableMenu\Tests\SortableMenuMultisitesTest

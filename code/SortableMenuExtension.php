@@ -1,6 +1,15 @@
 <?php
 
-class SortableMenu extends DataExtension
+namespace Symbiote\SortableMenu;
+
+use SilbinaryWolf\SortableMenu\SortableMenuException;
+use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\DataList;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\ORM\DataExtension;
+
+class SortableMenuExtension extends DataExtension
 {
     private static $menus = array();
 
@@ -24,7 +33,7 @@ class SortableMenu extends DataExtension
         $menus = static::get_sortable_menu_configuration();
         $dbFields = array();
         foreach ($menus as $fieldName => $extraInfo) {
-            $dbFields[$fieldName] = 'Boolean';
+            $dbFields[$fieldName] = DBBoolean::class;
             $dbFields[$extraInfo['Sort']] = 'Int';
         }
         $result = array(
@@ -49,7 +58,7 @@ class SortableMenu extends DataExtension
         if (!$cacheKey) {
             throw new SortableMenuException(__FUNCTION__.': Cannot have empty $cacheKey parameter.');
         }
-        $baseClass = $this->ownerBaseClass;
+        $baseClass = $this->getOwnerBaseclass();
         if (!isset(self::$_cached_cache_max_lastedited[$baseClass])) {
             // Reuse the max('LastEdited') / count() values for the class if
             // already queried. (Can shave off upto ~0.0010s per sortable menu)
@@ -72,7 +81,7 @@ class SortableMenu extends DataExtension
             throw new SortableMenuException(__FUNCTION__.': "'.$fieldName.'" hasn\'t been configured.');
         }
         $extraInfo = $menus[$fieldName];
-        $class = $this->ownerBaseClass;
+        $class = $this->getOwnerBaseclass();
         $list = DataList::create($class)->filter(array(
             $fieldName => 1
         ))->sort($extraInfo['Sort']);
@@ -120,5 +129,14 @@ class SortableMenu extends DataExtension
             $result[$fieldName] = $extraInfo;
         }
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    private function getOwnerBaseclass()
+    {
+        $class = get_class($this->getOwner());
+        return DataObject::getSchema()->baseDataClass($class);
     }
 }

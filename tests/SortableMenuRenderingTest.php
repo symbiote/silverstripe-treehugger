@@ -145,7 +145,7 @@ HTML;
     /**
      * Taken from "framework\tests\view\SSViewerTest.php"
      */
-    protected function assertEqualIgnoringWhitespace($a, $b, $message = '')
+    private function assertEqualIgnoringWhitespace($a, $b, $message = '')
     {
         $this->assertEquals(preg_replace('/\s/', '', $a), preg_replace('/\s/', '', $b), $message);
     }

@@ -4,12 +4,6 @@ class SortableMenuManageExtension extends Extension
 {
     public function updateCMSFields(FieldList $fields)
     {
-        // Determine whether the "Menus" tab has been created or not already.
-        if ($this->owner->_sortable_menu_manage_getcmsfields_called) {
-            return;
-        }
-        $this->owner->_sortable_menu_manage_getcmsfields_called = true;
-
         // Base class
         $basePageClass = '';
         if (SiteTree::has_extension('SortableMenu')) {
@@ -35,8 +29,7 @@ class SortableMenuManageExtension extends Extension
             }
             $sortableMenuTab->setTitle('Menus');
             if (!$sortableMenuTab instanceof TabSet) {
-                $badClass = get_class($sortableMenuTab);
-                throw new SortableMenuException('Sortable Menu must be a "TabSet", not "'.$badClass.'"');
+                throw new SortableMenuException('Sortable Menu must be a "TabSet", not "'.get_class($sortableMenuTab).'"');
             }
             $sortableMenuTab = $fields->findOrMakeTab('Root.SortableMenu', 'Menus');
             $menus = singleton('SortableMenu')->getSortableMenuConfiguration();

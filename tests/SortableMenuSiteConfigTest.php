@@ -1,6 +1,6 @@
 <?php
 
-class SortableMenuMultisitesSiteTreeBugBCTest extends FunctionalTest
+class SortableMenuSiteConfigTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
 
@@ -8,11 +8,11 @@ class SortableMenuMultisitesSiteTreeBugBCTest extends FunctionalTest
 
     public function setUp()
     {
-        // NOTE(Jake): 2018-08-09
+        // NOTE(Jake): 2018-08-10
         //
-        // If we can't find "Site" class, skip all tests.
+        // If we can't find "SiteConfig" class, skip all tests.
         //
-        if (!class_exists('Site')) {
+        if (!class_exists('SiteConfig')) {
             $this->skipTest = true;
         }
 
@@ -29,23 +29,21 @@ class SortableMenuMultisitesSiteTreeBugBCTest extends FunctionalTest
         // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
         // I suspect its not flushing the YML or something?
         //
-        Page::remove_extension('SortableMenu');
-        SiteTree::add_extension('SortableMenu');
+        Page::add_extension('SortableMenu');
         parent::setUp();
     }
 
-    public function testLoadEditingSiteTreeWithNoData()
+    public function testLoadEditingSiteConfigWithNoData()
     {
         $this->logInWithPermission('ADMIN');
 
-        //
-        $site = new Site();
-        $site->Title = 'Another site';
-        $site->write();
-        $site->doPublish();
+        // Taken from SiteConfig::requireDefaultRecords()
+        $config = DataObject::get_one('SiteConfig');
+        if(!$config) {
+            $config = SiteConfig::make_site_config();
+        }
 
-        $pageID = $site->ID;
-        $response = $this->get('admin/pages/edit/show/' . $pageID);
+        $response = $this->get($config->CMSEditLink());
 
         // Check that the GridFields have been created in the CMS
         $this->assertContains('<input type="hidden" name="ShowInFooter[GridState]" ', $response->getBody());
@@ -55,7 +53,7 @@ class SortableMenuMultisitesSiteTreeBugBCTest extends FunctionalTest
     /**
      * Taken from "framework\tests\view\SSViewerTest.php"
      */
-    protected function assertEqualIgnoringWhitespace($a, $b, $message = '')
+    private function assertEqualIgnoringWhitespace($a, $b, $message = '')
     {
         $this->assertEquals(preg_replace('/\s/', '', $a), preg_replace('/\s/', '', $b), $message);
     }

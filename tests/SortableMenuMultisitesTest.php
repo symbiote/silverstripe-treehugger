@@ -1,5 +1,11 @@
 <?php
 
+//
+// NOTE(Jake): 2018-08-10
+//
+// When Multisites is installed, this is the only test that can pass as
+// the others get validation errors due to how Multisites works.
+//
 class SortableMenuMultisitesTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
@@ -14,8 +20,6 @@ class SortableMenuMultisitesTest extends FunctionalTest
         //
         if (!class_exists('Site')) {
             $this->skipTest = true;
-            parent::setUp();
-            return;
         }
 
         Config::inst()->update('SortableMenu', 'menus', array(
@@ -41,7 +45,7 @@ class SortableMenuMultisitesTest extends FunctionalTest
 
         //
         $site = new Site();
-        $site->Title = 'Test';
+        $site->Title = 'Test Site';
         $site->write();
         $site->doPublish();
 
@@ -56,7 +60,7 @@ class SortableMenuMultisitesTest extends FunctionalTest
     /**
      * Taken from "framework\tests\view\SSViewerTest.php"
      */
-    protected function assertEqualIgnoringWhitespace($a, $b, $message = '')
+    private function assertEqualIgnoringWhitespace($a, $b, $message = '')
     {
         $this->assertEquals(preg_replace('/\s/', '', $a), preg_replace('/\s/', '', $b), $message);
     }

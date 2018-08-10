@@ -1,6 +1,6 @@
 <?php
 
-namespace SilbinaryWolf\SortableMenu;
+namespace Symbiote\SortableMenu;
 
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;

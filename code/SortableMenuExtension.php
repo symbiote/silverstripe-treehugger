@@ -2,12 +2,13 @@
 
 namespace Symbiote\SortableMenu;
 
-use SilbinaryWolf\SortableMenu\SortableMenuException;
+use Symbiote\SortableMenu\SortableMenuExtensionException;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataObject;
 
 class SortableMenuExtension extends DataExtension
 {

@@ -1,20 +1,18 @@
 ---
-Name: treehugger_multisites
-After:
-  - 'framework/*', 'cms/*'
+Name: treehugger-multisites
 Only:
-  moduleexists: multisites
+  moduleexists:
+    - 'symbiote/silverstripe-multisites'
 ---
-Site:
+Symbiote\Multisites\Model\Site:
   extensions:
-    - SortableMenuManageExtension
+    - Symbiote\SortableMenu\SortableMenuManageExtension
 ---
-Name: treehugger_default
-After:
-  - 'framework/*', 'cms/*'
+Name: treehugger-default
 Except:
-  moduleexists: multisites
+  moduleexists:
+    - 'symbiote/silverstripe-multisites'
 ---
-SiteConfig:
+SilverStripe\SiteConfig\SiteConfig:
   extensions:
-    - SortableMenuManageExtension
+    - Symbiote\SortableMenu\SortableMenuManageExtension

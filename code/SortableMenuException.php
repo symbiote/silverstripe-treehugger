@@ -1,6 +1,6 @@
 <?php
 
-namespace SilbinaryWolf\SortableMenu;
+namespace Symbiote\SortableMenu;
 
 use Exception;
 

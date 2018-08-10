@@ -6,7 +6,7 @@ use Page;
 
 use Symbiote\Multisites\Model\Site;
 use SilverStripe\Core\Config\Config;
-use Symbiote\SortableMenu\SortableMenu;
+use Symbiote\SortableMenu\SortableMenuExtension;
 use SilverStripe\Dev\FunctionalTest;
 
 
@@ -38,7 +38,7 @@ class SortableMenuMultisitesTest extends FunctionalTest
             $this->skipTest = true;
         }
 
-        Config::inst()->update(SortableMenu::class, 'menus', array(
+        Config::inst()->update(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
             ),
@@ -51,7 +51,7 @@ class SortableMenuMultisitesTest extends FunctionalTest
         // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
         // I suspect its not flushing the YML or something?
         //
-        Page::add_extension(SortableMenu::class);
+        Page::add_extension(SortableMenuExtension::class);
         parent::setUp();
     }
 

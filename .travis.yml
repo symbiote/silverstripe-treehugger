@@ -36,5 +36,5 @@ before_script:
 
 script:
   - if [[ $PHPCS_TEST ]]; then vendor/bin/phpcs treehugger/code/ treehugger/tests/ -n; fi
-  - if [[ "$MULTISITES_VERSION" -gt "0.0.0" ]]; then composer require --no-update symbiote/silverstripe-multisites:$MULTISITES_VERSION; fi
-  - if [[ "$MULTISITES_VERSION" -gt "0.0.0" ]]; then vendor/bin/phpunit treehugger/tests/SortableMenuMultisitesTest '' flush=all; fi
+  - if [[ $MULTISITES_VERSION ]]; then composer require --no-update symbiote/silverstripe-multisites:$MULTISITES_VERSION; fi
+  - if [[ $MULTISITES_VERSION ]]; then vendor/bin/phpunit treehugger/tests/SortableMenuMultisitesTest '' flush=all; fi

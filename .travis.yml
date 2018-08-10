@@ -13,7 +13,7 @@ matrix:
       env:
         - DB=MYSQL
         - CORE_RELEASE=3.1
-        - MULTISITES_VERSION=4.3.0
+        - MULTISITES_VERSION=1.2.5
     - php: 5.4
       env:
         - DB=PGSQL

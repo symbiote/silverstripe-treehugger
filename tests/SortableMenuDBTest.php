@@ -11,6 +11,10 @@ class SortableMenuDBTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
+    protected static $extra_dataobjects = [
+        Page::class,
+    ];
+
     public function setUp()
     {
         Config::inst()->update(SortableMenuExtension::class, 'menus', array(

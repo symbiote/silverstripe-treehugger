@@ -11,6 +11,10 @@ class SortableMenuRenderingTest extends SapphireTest
 {
     protected static $use_draft_site = true;
 
+    protected static $extra_dataobjects = [
+        Page::class,
+    ];
+
     protected $usesDatabase = true;
 
     public function setUp()

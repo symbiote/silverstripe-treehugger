@@ -1,38 +1,66 @@
 language: php
 
 php:
-  - 5.4
+  - 5.6
+
 env:
   matrix:
-    - DB=MYSQL CORE_RELEASE=3.1
+    - DB=MYSQL CORE_RELEASE=4
 
 matrix:
   include:
-    - php: 5.4
-      env:
-        - DB=MYSQL
-        - CORE_RELEASE=3.1
-    - php: 5.4
-      env:
-        - DB=PGSQL
-        - CORE_RELEASE=3.2
-    - php: 5.5
-      env:
-        - DB=MYSQL
-        - CORE_RELEASE=3.3
     - php: 5.6
       env:
+        - RECIPE_VERSION=4.x-dev
+        - DB=MYSQL
+        - CORE_RELEASE=3.1
+        - MULTISITES_VERSION=5.0.3
+        - GRIDFIELDEXTENSIONS_VERSION=3.2.0
+    - php: 7.0
+      env:
+        - RECIPE_VERSION=4.x-dev
+        - DB=PGSQL
+        - CORE_RELEASE=3.2
+        - MULTISITES_VERSION=5.0.3
+        # NOTE(Jake): 2018-08-10
+        #
+        # This test is testing the *lack* of GridFieldExtensions
+        # being installed.
+        #
+        #- GRIDFIELDEXTENSIONS_VERSION=3.2.0
+    - php: 7.1
+      env:
+        - RECIPE_VERSION=4.x-dev
+        - DB=MYSQL
+        - CORE_RELEASE=3.3
+        - MULTISITES_VERSION=5.0.3
+        - GRIDFIELDEXTENSIONS_VERSION=3.2.0
+    - php: 7.2
+      env:
+        - RECIPE_VERSION=4.x-dev
         - DB=MYSQL
         - PHPCS_TEST=1
         - CORE_RELEASE=3
+        - MULTISITES_VERSION=5.0.3
+        # NOTE(Jake): 2018-08-10
+        #
+        # This test is testing the *lack* of GridFieldExtensions
+        # being installed.
+        #
+        #- GRIDFIELDEXTENSIONS_VERSION=3.2.0
 
 before_script:
-  - composer self-update || true
   - phpenv rehash
-  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
-  - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
-  - cd ~/builds/ss
+  - phpenv config-rm xdebug.ini
+  - composer validate
+  - composer require --no-update silverstripe/recipe-cms:$RECIPE_VERSION
+  - if [[ $DB == PGSQL ]]; then composer require --no-update silverstripe/postgresql:2.0.x-dev; fi
+  - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 script:
+  - if [[ $GRIDFIELDEXTENSIONS_VERSION ]]; then composer require symbiote/silverstripe-gridfieldextensions:$GRIDFIELDEXTENSIONS_VERSION; fi
   - if [[ $PHPCS_TEST ]]; then vendor/bin/phpcs treehugger/code/ treehugger/tests/ -n; fi
-  - vendor/bin/phpunit treehugger/tests/
+  - vendor/bin/phpunit
+  - if [[ $MULTISITES_VERSION ]]; then composer require symbiote/silverstripe-multisites:$MULTISITES_VERSION; fi
+  # NOTE: Because we installed a new module, we need to flush the silverstripe-cache (and possibly rebuild the DB)
+  - if [[ $MULTISITES_VERSION ]]; then vendor/bin/phpunit treehugger/tests/SortableMenuMultisitesTest '' flush=all; fi

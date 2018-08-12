@@ -1,6 +1,16 @@
 <?php
 
-class SortableMenu extends DataExtension
+namespace Symbiote\SortableMenu;
+
+use Symbiote\SortableMenu\SortableMenuExtensionException;
+use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\DataList;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataObject;
+
+class SortableMenuExtension extends DataExtension
 {
     private static $menus = array();
 
@@ -16,7 +26,7 @@ class SortableMenu extends DataExtension
     public static function get_extra_config($class, $extension, $args)
     {
         if (self::$inConfigCall) {
-            throw new Exception('Recursion error.');
+            throw new SortableMenuException(__FUNCTION__.': Recursion error.');
         }
         // NOTE(Jake): If 'get_extra_config' is really aiming to be deprecated
         //             post 3.2+, then this logic can moved to a CompositeDBField
@@ -24,7 +34,7 @@ class SortableMenu extends DataExtension
         $menus = static::get_sortable_menu_configuration();
         $dbFields = array();
         foreach ($menus as $fieldName => $extraInfo) {
-            $dbFields[$fieldName] = 'Boolean';
+            $dbFields[$fieldName] = DBBoolean::class;
             $dbFields[$extraInfo['Sort']] = 'Int';
         }
         $result = array(
@@ -33,17 +43,23 @@ class SortableMenu extends DataExtension
         return $result;
     }
 
+    /**
+     * @return DataList
+     */
     public function SortableMenu($fieldName)
     {
         return $this->SortableMenuUncached($fieldName);
     }
 
+    /**
+     * @return string
+     */
     public function SortableMenuCacheKey($cacheKey)
     {
         if (!$cacheKey) {
-            throw new Exception("Cannot have empty $cacheKey value.");
+            throw new SortableMenuException(__FUNCTION__.': Cannot have empty $cacheKey parameter.');
         }
-        $baseClass = $this->ownerBaseClass;
+        $baseClass = $this->getOwnerBaseclass();
         if (!isset(self::$_cached_cache_max_lastedited[$baseClass])) {
             // Reuse the max('LastEdited') / count() values for the class if
             // already queried. (Can shave off upto ~0.0010s per sortable menu)
@@ -56,14 +72,17 @@ class SortableMenu extends DataExtension
         return $cacheKey.'_'.self::$_cached_cache_max_lastedited[$baseClass];
     }
 
+    /**
+     * @return DataList
+     */
     public function SortableMenuUncached($fieldName)
     {
         $menus = $this->getSortableMenuConfiguration();
         if (!isset($menus[$fieldName])) {
-            throw new Exception('"'.$fieldName.'" hasn\'t been configured.');
+            throw new SortableMenuException(__FUNCTION__.': "'.$fieldName.'" hasn\'t been configured.');
         }
         $extraInfo = $menus[$fieldName];
-        $class = $this->ownerBaseClass;
+        $class = $this->getOwnerBaseclass();
         $list = DataList::create($class)->filter(array(
             $fieldName => 1
         ))->sort($extraInfo['Sort']);
@@ -111,5 +130,14 @@ class SortableMenu extends DataExtension
             $result[$fieldName] = $extraInfo;
         }
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    private function getOwnerBaseclass()
+    {
+        $class = get_class($this->getOwner());
+        return DataObject::getSchema()->baseDataClass($class);
     }
 }

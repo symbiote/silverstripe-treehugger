@@ -1,5 +1,11 @@
 <?php
 
+namespace Symbiote\SortableMenu;
+
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\ORM\DataList;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+
 /**
  * Like 'GridFieldAddExistingAutocompleter' but instead updates a boolean value of a record when added.
  */

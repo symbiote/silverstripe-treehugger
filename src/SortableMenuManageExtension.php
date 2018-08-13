@@ -15,11 +15,13 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Core\Injector\Injector;
-use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\CMS\Controllers\CMSPageSettingsController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Extension;
+use SilverStripe\ORM\DataList;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use Symbiote\Multisites\Model\Site;
 
 class SortableMenuManageExtension extends Extension
 {
@@ -84,8 +86,20 @@ class SortableMenuManageExtension extends Extension
         if (!$class::has_extension(SortableMenuExtension::class)) {
             throw new SortableMenuException($class.' does not have SortableMenu extension applied.');
         }
+
+        //
         $record = singleton($class);
         $list = $record->SortableMenu($fieldName);
+        if ($this->owner instanceof Site) {
+            // NOTE(Jake): 2018-08-13
+            //
+            // Only show pages from this SiteID.
+            //
+            $siteID = $this->owner->ID;
+            if ($siteID) {
+                $list = $list->filter('SiteID', $siteID);
+            }
+        }
 
         $gridField = GridField::create($fieldName, $fieldTitle, $list, $config = GridFieldConfig_RelationEditor::create());
         $gridField->setDescription('Any "Modified" or "Draft" pages must be saved and published after sorting to display on the live site.');
@@ -95,7 +109,22 @@ class SortableMenuManageExtension extends Extension
         $config->removeComponentsByType(GridFieldEditButton::class);
         $config->removeComponentsByType(GridFieldDeleteAction::class);
         $config->removeComponentsByType(GridFieldFilterHeader::class);
-        $config->addComponent(Injector::inst()->createWithArgs(GridFieldAddSortableMenuItem::class, array($fieldName)));
+        $gridFieldAddSortableMenu = Injector::inst()->createWithArgs(GridFieldAddSortableMenuItem::class, array($fieldName));
+        if ($this->owner instanceof Site) {
+            // NOTE(Jake): 2018-08-13
+            //
+            // Limit pages you can add to the menu by SiteID.
+            // If you need to link across websites, please use RedirectorPage.
+            //
+            $dataClass = $gridField->getModelClass();
+            $searchList = DataList::create($dataClass);
+            $siteID = $this->owner->ID;
+            if ($siteID) {
+                $searchList = $searchList->filter('SiteID', $siteID);
+            }
+            $gridFieldAddSortableMenu->setSearchList($searchList);
+        }
+        $config->addComponent($gridFieldAddSortableMenu);
         if (class_exists(GridFieldOrderableRows::class)) {
             $config->addComponent(GridFieldOrderableRows::create($sortFieldName));
         }

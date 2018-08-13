@@ -11,6 +11,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\CMS\Model\SiteTree;
+use Symbiote\Multisites\Model\Site;
 
 class SortableMenuExtension extends DataExtension
 {
@@ -71,6 +72,17 @@ class SortableMenuExtension extends DataExtension
                 (int)$list->count(),
             ));
         }
+        // Add SiteID to cache key so each Site has a seperate cache key
+        if (class_exists(Site::class)) {
+            $record = $this->owner;
+            $siteID = 0;
+            if ($record instanceof Site) {
+                $siteID = $record->ID;
+            } else {
+                $siteID = $record->SiteID;
+            }
+            $cacheKey .= '_'.$siteID;
+        }
         return $cacheKey.'_'.self::$_cached_cache_max_lastedited[$baseClass];
     }
 
@@ -88,6 +100,19 @@ class SortableMenuExtension extends DataExtension
         $list = DataList::create($class)->filter(array(
             $fieldName => 1
         ))->sort($extraInfo['Sort']);
+        // Filter by SiteID
+        if (class_exists(Site::class)) {
+            $record = $this->owner;
+            $siteID = 0;
+            if ($record instanceof Site) {
+                $siteID = $record->ID;
+            } else {
+                $siteID = $record->SiteID;
+            }
+            if ($siteID) {
+                $list = $list->filter('SiteID', $siteID);
+            }
+        }
         // Store fieldname directly on list to use as a cache parameter
         $list->SortableMenuFieldName = $fieldName;
         return $list;

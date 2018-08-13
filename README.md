@@ -16,8 +16,8 @@ composer require silbinarywolf/silverstripe-treehugger:~2.0.0
 
 ## Features
 
-- Add a checkbox to the "Settings" tab for a menu kind.
-- Allow sorting of menus that is independent of the ordering in the site tree.
+- Page CMS editing, Adds a checkbox to the "Settings" tab for each defined menu kind.
+- Allow re-ordering of pages for each menu kind (independent of the ordering in the site tree)
     - Requires [GridField Extensions](https://github.com/symbiote/silverstripe-gridfieldextensions).
 - Easy to drop-in and use with partial caching.
     - Partial caching is recommended to improve page-load times when you have thousands of pages.

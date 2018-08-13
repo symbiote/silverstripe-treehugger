@@ -11,12 +11,6 @@ class SortableMenuDBTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
 
-    protected static $required_extensions = [
-        Page::class => [
-            SortableMenuExtension::class,
-        ],
-    ];
-
     protected $requireDefaultRecordsFrom = [
         Page::class,
     ];
@@ -41,6 +35,7 @@ class SortableMenuDBTest extends FunctionalTest
         //Config::modify()->set(Page::class, 'extensions', array(
         //    SortableMenuExtension::class,
         //));
+        Page::remove_extension(SortableMenuExtension::class);
         Page::add_extension(SortableMenuExtension::class);
         parent::setUp();
     }

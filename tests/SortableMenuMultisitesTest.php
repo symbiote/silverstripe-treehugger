@@ -35,6 +35,7 @@ class SortableMenuMultisitesTest extends FunctionalTest
         // in this class.
         //
         if (!class_exists(Site::class)) {
+            parent::setUp();
             $this->markTestSkipped(sprintf('Skipping %s ', static::class));
             return;
         }

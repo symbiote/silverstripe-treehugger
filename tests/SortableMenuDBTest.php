@@ -7,7 +7,7 @@ use SilverStripe\Core\Config\Config;
 use Symbiote\SortableMenu\SortableMenuExtension;
 use SilverStripe\Dev\FunctionalTest;
 
-class SortableMenuDBTest extends SortableMenuTest
+class SortableMenuDBTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
 

@@ -29,7 +29,16 @@ class SortableMenuMultisitesTest extends FunctionalTest
 
     public function setUp()
     {
-        Config::inst()->update(SortableMenuExtension::class, 'menus', array(
+        // NOTE(Jake): 2018-08-09
+        //
+        // If we can't find "Site" class, skip all tests
+        // in this class.
+        //
+        if (!class_exists(Site::class)) {
+            $this->markTestSkipped(sprintf('Skipping %s ', static::class));
+            return;
+        }
+        Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
             ),
@@ -48,16 +57,6 @@ class SortableMenuMultisitesTest extends FunctionalTest
 
     public function testLoadEditingPageWithNoData()
     {
-        // NOTE(Jake): 2018-08-09
-        //
-        // If we can't find "Site" class, skip all tests
-        // in this class.
-        //
-        if (!class_exists(Site::class)) {
-            $this->skipTest = true;
-            return;
-        }
-
         $this->logInWithPermission('ADMIN');
 
         //

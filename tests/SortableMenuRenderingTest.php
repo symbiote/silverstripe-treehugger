@@ -9,9 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 
 class SortableMenuRenderingTest extends SapphireTest
 {
-    protected static $use_draft_site = true;
-
-    protected static $extra_dataobjects = [
+    protected $requireDefaultRecordsFrom = [
         Page::class,
     ];
 
@@ -19,7 +17,7 @@ class SortableMenuRenderingTest extends SapphireTest
 
     public function setUp()
     {
-        Config::inst()->update(SortableMenuExtension::class, 'menus', array(
+        Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
             ),
@@ -32,7 +30,7 @@ class SortableMenuRenderingTest extends SapphireTest
         // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
         // I suspect its not flushing the YML or something?
         //
-        Config::inst()->update('Page', 'extensions', array(
+        Config::modify()->set(Page::class, 'extensions', array(
             SortableMenuExtension::class,
         ));
         parent::setUp();

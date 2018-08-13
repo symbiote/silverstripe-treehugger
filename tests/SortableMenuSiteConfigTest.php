@@ -23,10 +23,11 @@ class SortableMenuSiteConfigTest extends FunctionalTest
         // If we can't find "SiteConfig" class, skip all tests.
         //
         if (!class_exists(SiteConfig::class)) {
-            $this->skipTest = true;
+            $this->markTestSkipped(sprintf('Skipping %s ', static::class));
+            return;
         }
 
-        Config::inst()->update(SortableMenuExtension::class, 'menus', array(
+        Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
             ),

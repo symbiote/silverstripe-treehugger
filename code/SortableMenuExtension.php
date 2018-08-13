@@ -2,6 +2,7 @@
 
 namespace Symbiote\SortableMenu;
 
+use Page;
 use Symbiote\SortableMenu\SortableMenuExtensionException;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\DataList;
@@ -9,6 +10,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\CMS\Model\SiteTree;
 
 class SortableMenuExtension extends DataExtension
 {
@@ -137,7 +139,16 @@ class SortableMenuExtension extends DataExtension
      */
     private function getOwnerBaseclass()
     {
-        $class = get_class($this->getOwner());
-        return DataObject::getSchema()->baseDataClass($class);
+        $owner = $this->getOwner();
+        if ($owner instanceof Page) {
+            return Page::class;
+        }
+        // Fallback to if somebody extended SiteTree
+        if ($owner instanceof SiteTree) {
+            return SiteTree::class;
+        }
+        $class = get_class($owner);
+        $class = DataObject::getSchema()->baseDataClass($class);
+        return $class;
     }
 }

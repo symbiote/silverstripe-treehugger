@@ -17,14 +17,15 @@ class SortableMenuDBTest extends FunctionalTest
 
     protected $usesDatabase = true;
 
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
+        // NOTE(Jake): 2018-08-13
+        //
+        // Add configs to SortableMenuExtension, then apply to
+        // `Page` record. Because this modifies the DB fields, we need
+        // to call `static::resetDBSchema(true, true);`
+        //
         Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
@@ -33,14 +34,6 @@ class SortableMenuDBTest extends FunctionalTest
                 'Title' => 'Sidebar',
             ),
         ));
-        // NOTE(Jake): 2018-08-09
-        //
-        // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
-        // I suspect its not flushing the YML or something?
-        //
-        //Config::modify()->set(Page::class, 'extensions', array(
-        //    SortableMenuExtension::class,
-        //));
         Page::add_extension(SortableMenuExtension::class);
         static::resetDBSchema(true, true);
     }

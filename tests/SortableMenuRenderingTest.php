@@ -11,6 +11,12 @@ class SortableMenuRenderingTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
 
+    protected static $required_extensions = [
+        Page::class => [
+            SortableMenuExtension::class,
+        ],
+    ];
+
     protected $requireDefaultRecordsFrom = [
         Page::class,
     ];
@@ -37,17 +43,6 @@ class SortableMenuRenderingTest extends FunctionalTest
         //));
         Page::add_extension(SortableMenuExtension::class);
         parent::setUp();
-
-        //
-        foreach ($this->requireDefaultRecordsFrom as $className) {
-            $instance = singleton($className);
-            if (method_exists($instance, 'requireDefaultRecords')) {
-                $instance->requireDefaultRecords();
-            }
-            if (method_exists($instance, 'augmentDefaultRecords')) {
-                $instance->augmentDefaultRecords();
-            }
-        }
     }
 
     public function testRenderingMenusByOrder()

@@ -11,15 +11,15 @@ class SortableMenuDBTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
 
-    protected $requireDefaultRecordsFrom = [
-        Page::class,
-    ];
-
-    /*protected static $required_extensions = [
+    protected static $required_extensions = [
         Page::class => [
             SortableMenuExtension::class,
         ],
-    ];*/
+    ];
+
+    protected $requireDefaultRecordsFrom = [
+        Page::class,
+    ];
 
     protected $usesDatabase = true;
 
@@ -43,16 +43,6 @@ class SortableMenuDBTest extends FunctionalTest
         //));
         Page::add_extension(SortableMenuExtension::class);
         parent::setUp();
-        //
-        foreach ($this->requireDefaultRecordsFrom as $className) {
-            $instance = singleton($className);
-            if (method_exists($instance, 'requireDefaultRecords')) {
-                $instance->requireDefaultRecords();
-            }
-            if (method_exists($instance, 'augmentDefaultRecords')) {
-                $instance->augmentDefaultRecords();
-            }
-        }
     }
 
     public function testDBFieldsApplyToDataObject()

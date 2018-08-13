@@ -59,7 +59,7 @@ before_script:
 
 script:
   - if [[ $GRIDFIELDEXTENSIONS_VERSION ]]; then composer require symbiote/silverstripe-gridfieldextensions:$GRIDFIELDEXTENSIONS_VERSION; fi
-  - if [[ $PHPCS_TEST ]]; then vendor/bin/phpcs code/ tests/ -n; fi
+  - if [[ $PHPCS_TEST ]]; then vendor/bin/phpcs src/ tests/ -n; fi
   - vendor/bin/phpunit
   - if [[ $MULTISITES_VERSION ]]; then composer require symbiote/silverstripe-multisites:$MULTISITES_VERSION; fi
   # NOTE: Because we installed a new module, we need to flush the silverstripe-cache (and possibly rebuild the DB)

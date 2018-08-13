@@ -29,18 +29,15 @@ class SortableMenuMultisitesTest extends FunctionalTest
 
     protected $usesDatabase = true;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        // NOTE(Jake): 2018-08-09
+        parent::setUpBeforeClass();
+        // NOTE(Jake): 2018-08-13
         //
-        // If we can't find "Site" class, skip all tests
-        // in this class.
+        // Add configs to SortableMenuExtension, then apply to
+        // `Page` record. Because this modifies the DB fields, we need
+        // to call `static::resetDBSchema(true, true);`
         //
-        if (!class_exists(Site::class)) {
-            parent::setUp();
-            $this->markTestSkipped(sprintf('Skipping %s ', static::class));
-            return;
-        }
         Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
@@ -49,13 +46,22 @@ class SortableMenuMultisitesTest extends FunctionalTest
                 'Title' => 'Sidebar',
             ),
         ));
+        Page::add_extension(SortableMenuExtension::class);
+        static::resetDBSchema(true, true);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
         // NOTE(Jake): 2018-08-09
         //
-        // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
-        // I suspect its not flushing the YML or something?
+        // If we can't find "Site" class, skip all tests
+        // in this class.
         //
-        Page::add_extension(SortableMenuExtension::class);
-        parent::setUp();
+        if (!class_exists(Site::class)) {
+            $this->markTestSkipped(sprintf('Skipping %s ', static::class));
+            return;
+        }
     }
 
     public function testLoadEditingPageWithNoData()

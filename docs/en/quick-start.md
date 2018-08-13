@@ -6,11 +6,9 @@
 
 ```yml
 ---
-Name: menus
-After:
-  - 'framework/*', 'cms/*'
+Name: sortable-menu
 ---
-SortableMenu:
+Symbiote\SortableMenu\SortableMenuExtension:
   menus:
     ShowInFooter:
       Title: 'Footer'

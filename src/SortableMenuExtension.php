@@ -1,6 +1,19 @@
 <?php
 
-class SortableMenu extends DataExtension
+namespace Symbiote\SortableMenu;
+
+use Page;
+use Symbiote\SortableMenu\SortableMenuExtensionException;
+use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\DataList;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\CMS\Model\SiteTree;
+use Symbiote\Multisites\Model\Site;
+
+class SortableMenuExtension extends DataExtension
 {
     private static $menus = array();
 
@@ -24,7 +37,7 @@ class SortableMenu extends DataExtension
         $menus = static::get_sortable_menu_configuration();
         $dbFields = array();
         foreach ($menus as $fieldName => $extraInfo) {
-            $dbFields[$fieldName] = 'Boolean';
+            $dbFields[$fieldName] = DBBoolean::class;
             $dbFields[$extraInfo['Sort']] = 'Int';
         }
         $result = array(
@@ -49,7 +62,7 @@ class SortableMenu extends DataExtension
         if (!$cacheKey) {
             throw new SortableMenuException(__FUNCTION__.': Cannot have empty $cacheKey parameter.');
         }
-        $baseClass = $this->ownerBaseClass;
+        $baseClass = $this->getOwnerBaseclass();
         if (!isset(self::$_cached_cache_max_lastedited[$baseClass])) {
             // Reuse the max('LastEdited') / count() values for the class if
             // already queried. (Can shave off upto ~0.0010s per sortable menu)
@@ -58,6 +71,17 @@ class SortableMenu extends DataExtension
                 $list->max('LastEdited'),
                 (int)$list->count(),
             ));
+        }
+        // Add SiteID to cache key so each Site has a seperate cache key
+        if (class_exists(Site::class)) {
+            $record = $this->owner;
+            $siteID = 0;
+            if ($record instanceof Site) {
+                $siteID = $record->ID;
+            } else {
+                $siteID = $record->SiteID;
+            }
+            $cacheKey .= '_'.$siteID;
         }
         return $cacheKey.'_'.self::$_cached_cache_max_lastedited[$baseClass];
     }
@@ -72,10 +96,23 @@ class SortableMenu extends DataExtension
             throw new SortableMenuException(__FUNCTION__.': "'.$fieldName.'" hasn\'t been configured.');
         }
         $extraInfo = $menus[$fieldName];
-        $class = $this->ownerBaseClass;
+        $class = $this->getOwnerBaseclass();
         $list = DataList::create($class)->filter(array(
             $fieldName => 1
         ))->sort($extraInfo['Sort']);
+        // Filter by SiteID
+        if (class_exists(Site::class)) {
+            $record = $this->owner;
+            $siteID = 0;
+            if ($record instanceof Site) {
+                $siteID = $record->ID;
+            } else {
+                $siteID = $record->SiteID;
+            }
+            if ($siteID) {
+                $list = $list->filter('SiteID', $siteID);
+            }
+        }
         // Store fieldname directly on list to use as a cache parameter
         $list->SortableMenuFieldName = $fieldName;
         return $list;
@@ -120,5 +157,24 @@ class SortableMenu extends DataExtension
             $result[$fieldName] = $extraInfo;
         }
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    private function getOwnerBaseclass()
+    {
+        $owner = $this->getOwner();
+        if ($owner instanceof Page) {
+            return Page::class;
+        }
+        // Fallback to support SiteTree for BC reasons.
+        // ie. upgrading a SS 3.X wherein this extension was applied to `SiteTree`
+        if ($owner instanceof SiteTree) {
+            return SiteTree::class;
+        }
+        $class = get_class($owner);
+        $class = DataObject::getSchema()->baseDataClass($class);
+        return $class;
     }
 }

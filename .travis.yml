@@ -63,4 +63,4 @@ script:
   - vendor/bin/phpunit
   - if [[ $MULTISITES_VERSION ]]; then composer require symbiote/silverstripe-multisites:$MULTISITES_VERSION; fi
   # NOTE: Because we installed a new module, we need to flush the silverstripe-cache (and possibly rebuild the DB)
-  - if [[ $MULTISITES_VERSION ]]; then vendor/bin/phpunit treehugger/tests/SortableMenuMultisitesTest '' flush=all; fi
+  - if [[ $MULTISITES_VERSION ]]; then vendor/bin/phpunit vendor/silbinarywolf/silverstripe-treehugger/tests/SortableMenuMultisitesTest '' flush=all; fi

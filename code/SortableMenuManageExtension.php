@@ -21,7 +21,6 @@ use SilverStripe\CMS\Controllers\CMSPageSettingsController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Extension;
 
-
 class SortableMenuManageExtension extends Extension
 {
     public function updateCMSFields(FieldList $fields)

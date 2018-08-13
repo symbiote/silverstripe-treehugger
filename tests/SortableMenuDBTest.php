@@ -5,13 +5,21 @@ namespace Symbiote\SortableMenu\Tests;
 use Page;
 use SilverStripe\Core\Config\Config;
 use Symbiote\SortableMenu\SortableMenuExtension;
-use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\FunctionalTest;
 
-class SortableMenuDBTest extends SapphireTest
+class SortableMenuDBTest extends FunctionalTest
 {
+    protected static $use_draft_site = true;
+
     protected $requireDefaultRecordsFrom = [
         Page::class,
     ];
+
+    /*protected static $required_extensions = [
+        Page::class => [
+            SortableMenuExtension::class,
+        ],
+    ];*/
 
     protected $usesDatabase = true;
 
@@ -30,9 +38,10 @@ class SortableMenuDBTest extends SapphireTest
         // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
         // I suspect its not flushing the YML or something?
         //
-        Config::modify()->set(Page::class, 'extensions', array(
-            SortableMenuExtension::class,
-        ));
+        //Config::modify()->set(Page::class, 'extensions', array(
+        //    SortableMenuExtension::class,
+        //));
+        Page::add_extension(SortableMenuExtension::class);
         parent::setUp();
     }
 

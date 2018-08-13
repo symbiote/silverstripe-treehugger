@@ -3,12 +3,10 @@
 namespace Symbiote\SortableMenu\Tests;
 
 use Page;
-
 use Symbiote\Multisites\Model\Site;
 use SilverStripe\Core\Config\Config;
 use Symbiote\SortableMenu\SortableMenuExtension;
 use SilverStripe\Dev\FunctionalTest;
-
 
 //
 // NOTE(Jake): 2018-08-10
@@ -24,6 +22,10 @@ use SilverStripe\Dev\FunctionalTest;
 class SortableMenuMultisitesTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
+
+    protected $requireDefaultRecordsFrom = [
+        Page::class,
+    ];
 
     protected $usesDatabase = true;
 

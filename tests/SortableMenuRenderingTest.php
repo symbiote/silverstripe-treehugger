@@ -35,8 +35,8 @@ class SortableMenuRenderingTest extends FunctionalTest
         //Config::modify()->set(Page::class, 'extensions', array(
         //    SortableMenuExtension::class,
         //));
-        Page::remove_extension(SortableMenuExtension::class);
         Page::add_extension(SortableMenuExtension::class);
+        static::$tempDB->build();
         parent::setUp();
     }
 

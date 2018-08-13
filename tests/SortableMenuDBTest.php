@@ -19,6 +19,12 @@ class SortableMenuDBTest extends FunctionalTest
 
     public function setUp()
     {
+        parent::setUp();
+    }
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
         Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
@@ -37,7 +43,6 @@ class SortableMenuDBTest extends FunctionalTest
         //));
         Page::add_extension(SortableMenuExtension::class);
         static::resetDBSchema(true, true);
-        parent::setUp();
     }
 
     public function testDBFieldsApplyToDataObject()

@@ -19,6 +19,30 @@ class SortableMenuRenderingTest extends FunctionalTest
 
     public function setUp()
     {
+        /*Config::modify()->set(SortableMenuExtension::class, 'menus', array(
+            'ShowInFooter' => array(
+                'Title' => 'Footer',
+            ),
+            'ShowInSidebar' => array(
+                'Title' => 'Sidebar',
+            ),
+        ));
+        // NOTE(Jake): 2018-08-09
+        //
+        // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
+        // I suspect its not flushing the YML or something?
+        //
+        //Config::modify()->set(Page::class, 'extensions', array(
+        //    SortableMenuExtension::class,
+        //));
+        Page::add_extension(SortableMenuExtension::class);
+        static::resetDBSchema(true, true);*/
+        parent::setUp();
+    }
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
         Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
@@ -37,7 +61,6 @@ class SortableMenuRenderingTest extends FunctionalTest
         //));
         Page::add_extension(SortableMenuExtension::class);
         static::resetDBSchema(true, true);
-        parent::setUp();
     }
 
     public function testRenderingMenusByOrder()
@@ -86,7 +109,7 @@ class SortableMenuRenderingTest extends FunctionalTest
     </ul>
 </div>
 HTML;
-        $actualHTML = $record->renderWith(array(['type' => 'Includes', 'TestRenderingMenusByOrder']))->forTemplate();
+        $actualHTML = $record->renderWith([['type' => 'Includes', 'TestRenderingMenusByOrder']])->forTemplate();
         $this->assertEqualIgnoringWhitespace($expectedHTML, $actualHTML);
     }
 
@@ -151,7 +174,7 @@ HTML;
 
         $actualHTML = $record->customise(array(
             'PassedInMenuList' => $sortableMenus,
-        ))->renderWith(array('TestPassInMenuList'))->forTemplate();
+        ))->renderWith([['type' => 'Includes', 'TestPassInMenuList']])->forTemplate();
         $this->assertEqualIgnoringWhitespace($expectedHTML, $actualHTML);
     }
 

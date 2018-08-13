@@ -19,6 +19,7 @@ class SortableMenuRenderingTest extends FunctionalTest
 
     public function setUp()
     {
+        Config::nest();
         Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
@@ -37,6 +38,12 @@ class SortableMenuRenderingTest extends FunctionalTest
         //));
         Page::add_extension(SortableMenuExtension::class);
         parent::setUp();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        Config::unnest();
     }
 
     public function testRenderingMenusByOrder()

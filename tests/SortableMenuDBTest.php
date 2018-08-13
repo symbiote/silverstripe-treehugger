@@ -25,7 +25,6 @@ class SortableMenuDBTest extends FunctionalTest
 
     public function setUp()
     {
-        Config::nest();
         Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
@@ -44,12 +43,16 @@ class SortableMenuDBTest extends FunctionalTest
         //));
         Page::add_extension(SortableMenuExtension::class);
         parent::setUp();
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        Config::unnest();
+        //
+        foreach ($this->requireDefaultRecordsFrom as $className) {
+            $instance = singleton($className);
+            if (method_exists($instance, 'requireDefaultRecords')) {
+                $instance->requireDefaultRecords();
+            }
+            if (method_exists($instance, 'augmentDefaultRecords')) {
+                $instance->augmentDefaultRecords();
+            }
+        }
     }
 
     public function testDBFieldsApplyToDataObject()

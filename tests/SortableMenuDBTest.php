@@ -36,7 +36,7 @@ class SortableMenuDBTest extends FunctionalTest
         //    SortableMenuExtension::class,
         //));
         Page::add_extension(SortableMenuExtension::class);
-        static::$tempDB->build();
+        static::resetDBSchema(true, true);
         parent::setUp();
     }
 

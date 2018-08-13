@@ -36,7 +36,7 @@ class SortableMenuRenderingTest extends FunctionalTest
         //    SortableMenuExtension::class,
         //));
         Page::add_extension(SortableMenuExtension::class);
-        static::$tempDB->build();
+        static::resetDBSchema(true, true);
         parent::setUp();
     }
 
@@ -86,7 +86,7 @@ class SortableMenuRenderingTest extends FunctionalTest
     </ul>
 </div>
 HTML;
-        $actualHTML = $record->renderWith(array('TestRenderingMenusByOrder'))->forTemplate();
+        $actualHTML = $record->renderWith(array(['type' => 'Includes', 'TestRenderingMenusByOrder']))->forTemplate();
         $this->assertEqualIgnoringWhitespace($expectedHTML, $actualHTML);
     }
 

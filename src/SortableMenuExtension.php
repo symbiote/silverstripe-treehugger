@@ -143,7 +143,8 @@ class SortableMenuExtension extends DataExtension
         if ($owner instanceof Page) {
             return Page::class;
         }
-        // Fallback to if somebody extended SiteTree
+        // Fallback to support SiteTree for BC reasons.
+        // ie. upgrading a SS 3.X wherein this extension was applied to `SiteTree`
         if ($owner instanceof SiteTree) {
             return SiteTree::class;
         }

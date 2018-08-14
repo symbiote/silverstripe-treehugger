@@ -1,22 +1,31 @@
 <?php
 
+namespace Symbiote\SortableMenu\Tests;
+
+use Page;
+
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Core\Config\Config;
+use Symbiote\SortableMenu\SortableMenuExtension;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\FunctionalTest;
+
 class SortableMenuSiteConfigTest extends FunctionalTest
 {
     protected static $use_draft_site = true;
 
     protected $usesDatabase = true;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        // NOTE(Jake): 2018-08-10
+        parent::setUpBeforeClass();
+        // NOTE(Jake): 2018-08-13
         //
-        // If we can't find "SiteConfig" class, skip all tests.
+        // Add configs to SortableMenuExtension, then apply to
+        // `Page` record. Because this modifies the DB fields, we need
+        // to call `static::resetDBSchema(true, true);`
         //
-        if (!class_exists('SiteConfig')) {
-            $this->skipTest = true;
-        }
-
-        Config::inst()->update('SortableMenu', 'menus', array(
+        Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
             ),
@@ -24,13 +33,21 @@ class SortableMenuSiteConfigTest extends FunctionalTest
                 'Title' => 'Sidebar',
             ),
         ));
-        // NOTE(Jake): 2018-08-09
-        //
-        // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
-        // I suspect its not flushing the YML or something?
-        //
-        Page::add_extension('SortableMenu');
+        Page::add_extension(SortableMenuExtension::class);
+        static::resetDBSchema(true, true);
+    }
+
+    public function setUp()
+    {
         parent::setUp();
+        // NOTE(Jake): 2018-08-10
+        //
+        // If we can't find "SiteConfig" class, skip all tests.
+        //
+        if (!class_exists(SiteConfig::class)) {
+            $this->markTestSkipped(sprintf('Skipping %s ', static::class));
+            return;
+        }
     }
 
     public function testLoadEditingSiteConfigWithNoData()
@@ -38,7 +55,7 @@ class SortableMenuSiteConfigTest extends FunctionalTest
         $this->logInWithPermission('ADMIN');
 
         // Taken from SiteConfig::requireDefaultRecords()
-        $config = DataObject::get_one('SiteConfig');
+        $config = DataObject::get_one(SiteConfig::class);
         if (!$config) {
             $config = SiteConfig::make_site_config();
         }

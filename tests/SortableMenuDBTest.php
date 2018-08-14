@@ -1,12 +1,32 @@
 <?php
 
-class SortableMenuDBTest extends SapphireTest
+namespace Symbiote\SortableMenu\Tests;
+
+use Page;
+use SilverStripe\Core\Config\Config;
+use Symbiote\SortableMenu\SortableMenuExtension;
+use SilverStripe\Dev\FunctionalTest;
+
+class SortableMenuDBTest extends FunctionalTest
 {
+    protected static $use_draft_site = true;
+
+    protected $requireDefaultRecordsFrom = [
+        Page::class,
+    ];
+
     protected $usesDatabase = true;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        Config::inst()->update('SortableMenu', 'menus', array(
+        parent::setUpBeforeClass();
+        // NOTE(Jake): 2018-08-13
+        //
+        // Add configs to SortableMenuExtension, then apply to
+        // `Page` record. Because this modifies the DB fields, we need
+        // to call `static::resetDBSchema(true, true);`
+        //
+        Config::modify()->set(SortableMenuExtension::class, 'menus', array(
             'ShowInFooter' => array(
                 'Title' => 'Footer',
             ),
@@ -14,15 +34,8 @@ class SortableMenuDBTest extends SapphireTest
                 'Title' => 'Sidebar',
             ),
         ));
-        // NOTE(Jake): 2018-08-09
-        //
-        // The core `$requiredExtensions` functionality isn't working here in SS 3.X.
-        // I suspect its not flushing the YML or something?
-        //
-        Config::inst()->update('Page', 'extensions', array(
-            'SortableMenu',
-        ));
-        parent::setUp();
+        Page::add_extension(SortableMenuExtension::class);
+        static::resetDBSchema(true, true);
     }
 
     public function testDBFieldsApplyToDataObject()

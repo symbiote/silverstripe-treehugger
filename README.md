@@ -1,6 +1,6 @@
 # TreeHugger (Sortable Menus)
 
-[![Build Status](https://travis-ci.org/silbinarywolf/silverstripe-treehugger.svg?branch=master)](https://travis-ci.org/silbinarywolf/silverstripe-treehugger)
+[![Build Status](https://travis-ci.org/symbiote/silverstripe-treehugger.svg?branch=master)](https://travis-ci.org/silbinarywolf/silverstripe-treehugger)
 [![Latest Stable Version](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/version.svg)](https://github.com/silbinarywolf/silverstripe-treehugger/releases)
 [![Latest Unstable Version](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/v/unstable.svg)](https://packagist.org/packages/silbinarywolf/silverstripe-treehugger)
 [![Total Downloads](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/downloads.svg)](https://packagist.org/packages/silbinarywolf/silverstripe-treehugger)

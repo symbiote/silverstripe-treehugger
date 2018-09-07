@@ -1,17 +1,17 @@
 # TreeHugger (Sortable Menus)
 
-[![Build Status](https://travis-ci.org/symbiote/silverstripe-treehugger.svg?branch=master)](https://travis-ci.org/silbinarywolf/silverstripe-treehugger)
-[![Latest Stable Version](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/version.svg)](https://github.com/silbinarywolf/silverstripe-treehugger/releases)
-[![Latest Unstable Version](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/v/unstable.svg)](https://packagist.org/packages/silbinarywolf/silverstripe-treehugger)
-[![Total Downloads](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/downloads.svg)](https://packagist.org/packages/silbinarywolf/silverstripe-treehugger)
-[![License](https://poser.pugx.org/silbinarywolf/silverstripe-treehugger/license.svg)](https://github.com/silbinarywolf/silverstripe-treehugger/blob/master/LICENSE.md)
+[![Build Status](https://travis-ci.org/symbiote/silverstripe-treehugger.svg?branch=master)](https://travis-ci.org/symbiote/silverstripe-treehugger)
+[![Latest Stable Version](https://poser.pugx.org/symbiote/silverstripe-treehugger/version.svg)](https://github.com/symbiote/silverstripe-treehugger/releases)
+[![Latest Unstable Version](https://poser.pugx.org/symbiote/silverstripe-treehugger/v/unstable.svg)](https://packagist.org/packages/symbiote/silverstripe-treehugger)
+[![Total Downloads](https://poser.pugx.org/symbiote/silverstripe-treehugger/downloads.svg)](https://packagist.org/packages/symbiote/silverstripe-treehugger)
+[![License](https://poser.pugx.org/symbiote/silverstripe-treehugger/license.svg)](https://github.com/symbiote/silverstripe-treehugger/blob/master/LICENSE.md)
 
 Add additional menus (such as footer, sidebars) programmatically that can be managed by CMS users nicely on the SiteConfig or Multisite view.
 
 ## Composer Install
 
 ```
-composer require silbinarywolf/silverstripe-treehugger:~2.0.0
+composer require symbiote/silverstripe-treehugger:~2.0.0
 ```
 
 ## Features

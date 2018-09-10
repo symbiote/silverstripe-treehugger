@@ -11,7 +11,7 @@ Add additional menus (such as footer, sidebars) programmatically that can be man
 ## Composer Install
 
 ```
-composer require symbiote/silverstripe-treehugger:~2.0.0
+composer require symbiote/silverstripe-treehugger:~3.0
 ```
 
 ## Features

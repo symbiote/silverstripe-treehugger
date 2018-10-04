@@ -45,7 +45,7 @@ class SortableMenuManageExtension extends Extension
         if ($basePageClass !== '') {
             // Setup fields
             $rootTabSet = $fields->fieldByName('Root');
-            $sortableMenuTab = $rootTabSet->fieldByName('SortableMenu');
+            $sortableMenuTab = $rootTabSet->fieldByName(SortableMenuExtension::class);
             if (!$sortableMenuTab) {
                 $sortableMenuTab = TabSet::create(SortableMenuExtension::class, 'Menus');
                 $rootTabSet->push($sortableMenuTab);
@@ -54,7 +54,6 @@ class SortableMenuManageExtension extends Extension
             if (!$sortableMenuTab instanceof TabSet) {
                 throw new SortableMenuException('Sortable Menu must be a "TabSet", not "'.get_class($sortableMenuTab).'"');
             }
-            $sortableMenuTab = $fields->findOrMakeTab('Root.SortableMenu', 'Menus');
             $menus = singleton(SortableMenuExtension::class)->getSortableMenuConfiguration();
             foreach ($menus as $fieldName => $extraInfo) {
                 $fieldTitle = $extraInfo['Title'];
